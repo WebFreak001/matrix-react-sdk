@@ -58,6 +58,7 @@ export function diffDeletion(oldStr, newStr) {
     }
     const firstDiffIdx = firstDiff(oldStr, newStr);
     const lastDiffIdx = oldStr.length - lastDiff(oldStr, newStr) + 1;
+    console.log({lastDiffIdx});
     return {at: firstDiffIdx, removed: oldStr.substring(firstDiffIdx, lastDiffIdx)};
 }
 
