@@ -21,6 +21,7 @@ import { _t } from '../languageHandler';
 import AutocompleteProvider from './AutocompleteProvider';
 import QueryMatcher from './QueryMatcher';
 import {PillCompletion} from './Components';
+import MatrixClientPeg from '../MatrixClientPeg';
 import type {Completion, SelectionRange} from './Autocompleter';
 import _uniq from 'lodash/uniq';
 import _sortBy from 'lodash/sortBy';
@@ -121,6 +122,35 @@ export default class EmojiProvider extends AutocompleteProvider {
                     range,
                 };
             }).slice(0, LIMIT);
+
+            let emoji = await MatrixClientPeg.get().getAccountData("org.webfreak.customEmoji");
+            if (emoji) {
+                emoji = emoji.getContent();
+
+                var extra = [];
+
+                emoji.emoji.forEach(customEmoji => {
+                    if (!customEmoji.name.toLowerCase().startsWith(matchedString.toLowerCase()))
+                        return;
+
+                    let src = MatrixClientPeg.get().mxcUrlToHttp(
+                        customEmoji.url,
+                        24,
+                        24,
+                    );
+                    extra.push({
+                        completion: "customEmoji",
+                        completionId: [customEmoji.name, customEmoji.url],
+                        suffix: ' ',
+                        component: (
+                            <PillCompletion title={customEmoji.name} initialComponent={<img alt={customEmoji.name} title={customEmoji.name} src={src} height="24"/>} />
+                        ),
+                        range,
+                    });
+                });
+
+                completions = extra.concat(completions);
+            }
         }
         return completions;
     }

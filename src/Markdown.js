@@ -17,12 +17,18 @@ limitations under the License.
 import commonmark from 'commonmark';
 import escape from 'lodash/escape';
 
-const ALLOWED_HTML_TAGS = ['sub', 'sup', 'del', 'u'];
+const ALLOWED_HTML_TAGS = ['sub', 'sup', 'del', 'u', 'img'];
 
 // These types of node are definitely text
 const TEXT_NODES = ['text', 'softbreak', 'linebreak', 'paragraph', 'document'];
 
 function is_allowed_html_tag(node) {
+    var lit = node.literal;
+    if (!lit)
+        return false;
+    if (lit.startsWith("<img"))
+        return true;
+
     // Regex won't work for tags with attrs, but we only
     // allow <del> anyway.
     const matches = /^<\/?(.*)>$/.exec(node.literal);

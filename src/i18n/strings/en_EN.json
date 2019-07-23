@@ -609,6 +609,8 @@
     "Reject all %(invitedRooms)s invites": "Reject all %(invitedRooms)s invites",
     "Key backup": "Key backup",
     "Security & Privacy": "Security & Privacy",
+    "Custom Emoji": "Custom Emoji",
+    "Emoji Name": "Emoji Name",
     "Devices": "Devices",
     "Riot collects anonymous analytics to allow us to improve the application.": "Riot collects anonymous analytics to allow us to improve the application.",
     "Privacy is important to us, so we don't collect any personal or identifiable data for our analytics.": "Privacy is important to us, so we don't collect any personal or identifiable data for our analytics.",

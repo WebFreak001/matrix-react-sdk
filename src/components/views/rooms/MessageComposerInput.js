@@ -107,6 +107,9 @@ const SLATE_SCHEMA = {
         emoji: {
             isVoid: true,
         },
+        customEmoji: {
+            isVoid: true,
+        },
     },
 };
 
@@ -176,6 +179,8 @@ export default class MessageComposerInput extends React.Component {
                         switch (obj.type) {
                             case 'pill':
                                 return `[${ obj.data.get('completion') }](${ obj.data.get('href') })`;
+                            case 'customEmoji':
+                                return `<img src="${ obj.data.get('emojiSrc') }" alt="${ obj.data.get('label') }" title="${ obj.data.get('label') }" height="24"/>`;
                             case 'emoji':
                                 return obj.data.get('emojiUnicode');
                         }
@@ -246,6 +251,17 @@ export default class MessageComposerInput extends React.Component {
                                     nodes: next(el.childNodes),
                                 };
                             }
+                        } else if (tag == 'img') {
+                            const src = el.getAttribute('src');
+                            const title = el.getAttribute('title');
+                            return {
+                                object: 'inline',
+                                type: 'customEmoji',
+                                data: {
+                                    emojiSrc: src,
+                                    label: title
+                                }
+                            };
                         }
                     },
                     serialize: (obj, children) => {
@@ -265,6 +281,8 @@ export default class MessageComposerInput extends React.Component {
                             switch (obj.type) {
                                 case 'pill':
                                     return <a href={ obj.data.get('href') }>{ obj.data.get('completion') }</a>;
+                                case 'customEmoji':
+                                    return <img src={ obj.data.get('emojiSrc') } alt={ obj.data.get('label') } title={ obj.data.get('label') } height="24"/>;
                                 case 'link':
                                     return <a href={ obj.data.get('href') }>{ children }</a>;
                                 case 'emoji':
@@ -1279,6 +1297,11 @@ export default class MessageComposerInput extends React.Component {
                 type: 'pill',
                 data: { completion, completionId },
             });
+        } else if (completion === 'customEmoji') {
+            inline = Inline.create({
+                type: 'customEmoji',
+                data: { label: completionId[0], emojiSrc: completionId[1] },
+            });
         }
 
         let editorState = activeEditorState;
@@ -1343,6 +1366,14 @@ export default class MessageComposerInput extends React.Component {
                 return <pre {...attributes}>{children}</pre>;
             case 'link':
                 return <a {...attributes} href={ node.data.get('href') }>{children}</a>;
+            case 'customEmoji':
+                const srcRaw = node.data.get('emojiSrc');
+                const src = MatrixClientPeg.get().mxcUrlToHttp(
+                    srcRaw,
+                    24,
+                    24,
+                );
+                return <img {...attributes} src={ src } alt={ node.data.get('label') } title={ node.data.get('label') } height="24"/>;
             case 'pill': {
                 const { data } = node;
                 const url = data.get('href');

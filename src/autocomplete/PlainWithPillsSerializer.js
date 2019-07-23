@@ -75,6 +75,14 @@ class PlainWithPillsSerializer {
                 case 'id':
                     return node.data.get('completionId') || completion;
             }
+        } else if (node.type == 'customEmoji') {
+            switch (this.pillFormat) {
+                case 'md':
+                    return `<img src="${ node.data.get('emojiSrc') }" alt="${ node.data.get('label') }" title="${ node.data.get('label') }" height="24"/>`;
+                case 'plain':
+                case 'id':
+                    return node.data.get('label');
+            }
         } else if (node.nodes) {
             return node.nodes.map(this._serializeNode).join('');
         } else {

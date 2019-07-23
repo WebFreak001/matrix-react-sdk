@@ -24,6 +24,7 @@ import LabsUserSettingsTab from "../settings/tabs/user/LabsUserSettingsTab";
 import SecurityUserSettingsTab from "../settings/tabs/user/SecurityUserSettingsTab";
 import NotificationUserSettingsTab from "../settings/tabs/user/NotificationUserSettingsTab";
 import PreferencesUserSettingsTab from "../settings/tabs/user/PreferencesUserSettingsTab";
+import CustomEmojiSettingsTab from "../settings/tabs/user/CustomEmojiSettingsTab";
 import VoiceUserSettingsTab from "../settings/tabs/user/VoiceUserSettingsTab";
 import HelpUserSettingsTab from "../settings/tabs/user/HelpUserSettingsTab";
 import FlairUserSettingsTab from "../settings/tabs/user/FlairUserSettingsTab";
@@ -67,6 +68,11 @@ export default class UserSettingsDialog extends React.Component {
             _td("Security & Privacy"),
             "mx_UserSettingsDialog_securityIcon",
             <SecurityUserSettingsTab />,
+        ));
+        tabs.push(new Tab(
+            _td("Custom Emoji"),
+            "mx_UserSettingsDialog_customEmoji",
+            <CustomEmojiSettingsTab />,
         ));
         if (SdkConfig.get()['showLabsSettings'] || SettingsStore.getLabsFeatures().length > 0) {
             tabs.push(new Tab(
